@@ -18,3 +18,6 @@ atm project
 
 ## test.py
 - 테스트 코드
+
+# test
+- 프로젝트 루트에서 `python -m unittest` 실행
