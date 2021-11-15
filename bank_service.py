@@ -1,5 +1,4 @@
 import data
-from constants import Code
 from data import Values
 from exception import BankServiceException
 from model import Account
@@ -28,7 +27,7 @@ class BankService:
         return Account(account_number=account_number, balance=balance)
 
     @classmethod
-    def get_balance_with_account_number(cls, account_number, pin):
+    def get_balance_with_account_number(cls, account_number):
         account = [val for val in Values.accounts if val['account_number'] == account_number]
 
         if len(account) < 1:
@@ -36,23 +35,10 @@ class BankService:
         account = account[0]
 
         balance = account.get('balance', None)
-        account_pin = account.get('pin', None)
-        if balance is None or account_pin is None:
+        if balance is None:
             raise BankServiceException.InternalError('invalid account')
 
-        if account_pin != pin:
-            raise BankServiceException.Unauthorized('wrong pin')
-
         return balance
-
-    @classmethod
-    def __get_account_with_account_number(cls, account_number):
-        account = [val for val in Values.accounts if val['account_number'] == account_number]
-
-        if len(account) < 1:
-            raise BankServiceException.NotFound('wrong account number')
-
-        return account[0]
 
     @classmethod
     def get_account_with_account_number(cls, account_number):
@@ -65,19 +51,6 @@ class BankService:
             raise BankServiceException.InternalError('invalid account')
 
         return Account(account_number=account_number, balance=balance)
-
-    @classmethod
-    def __log_transaction(cls, transaction_type, account_number, amount):
-        new_key = len(data.Values.transactions) + 1
-
-        data.Values.transactions.append({
-            'key': new_key,
-            'type': transaction_type,
-            'account_number': account_number,
-            'amount': amount,
-        })
-
-        return new_key
 
     @classmethod
     def deposit(cls, account_number, amount):
@@ -134,3 +107,25 @@ class BankService:
         cls.__log_transaction('revert', transaction.get('account_number', None), -transaction.get('amount', 0))
 
         return True
+
+    @classmethod
+    def __get_account_with_account_number(cls, account_number):
+        account = [val for val in Values.accounts if val['account_number'] == account_number]
+
+        if len(account) < 1:
+            raise BankServiceException.NotFound('wrong account number')
+
+        return account[0]
+
+    @classmethod
+    def __log_transaction(cls, transaction_type, account_number, amount):
+        new_key = len(data.Values.transactions) + 1
+
+        data.Values.transactions.append({
+            'key': new_key,
+            'type': transaction_type,
+            'account_number': account_number,
+            'amount': amount,
+        })
+
+        return new_key
