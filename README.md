@@ -1,5 +1,4 @@
 # atm
-
 atm project
 
 # Getting Started
@@ -10,11 +9,25 @@ atm project
   - `source venv/bin/activate`
 
 # structure
-## main.py
-- 은행 api 호출부
+## atm_service.py
+- atm 서비스 클래스
+- atm의 카드 읽기, 입금, 출금 기능 수행
+
+## bank_service.py
+- 은행 api를 호출
 
 ## cash_bin.py
 - atm의 현금통
+
+## data.py
+- 은행 api의 database mocking
+
+## exception.py
+- custom exceptions
+
+## model.py
+- data model
+- 계좌 정보를 다루는 Account 모델 정의
 
 ## test.py
 - 테스트 코드
